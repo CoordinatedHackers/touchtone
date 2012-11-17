@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<style>
+	html {
+		font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	}
+	body {
+		margin: 0;
+	}
+	header {
+		background: #333;
+		width: 100%;
+		padding: 0 1em;
+	}
+	header > h1 {
+		color: white;
+		font-weight: 300;
+		margin: 0;
+		line-height: 2em;
+	}
+	#wrapper {
+		margin: 3em auto 0;
+		width: 10em;
+	}
+	#callButton {
+		text-align: center;
+		padding: 1.2em 1em;
+		cursor: pointer;
+		width: 14em;
+		background: #eee;
+		border: 1px solid #aaa;
+		color: #333;
+		border-radius: 0.5em;
+		box-shadow: 0 0 0 #00ef44;
+		-webkit-transition: box-shadow 100ms linear;
+	}
+	#callButton > h2 {
+		font-size: 1.3em;
+		font-weight: bold;
+		text-shadow: 0 1px 0 white;
+		margin: 0;
+	}
+	#callButton:hover {
+		/* background: #f5f5f5; */
+		box-shadow: 0 0 1em #00ef44;
+	}
+	#callButtonSubtitle {
+		font-weight: normal;
+		margin: 0.5em 0 0 0;
+	}
+</style>
+<header>
+<h1>Bank</h1>
+</header>
+
+<div id="wrapper">
+	<div id="callWidget">
+		<div id="callButton">
+			<h2>Click here to call us</h2>
+			<p id="callButtonSubtitle">Or call (973) 555-1212</p>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
