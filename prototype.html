@@ -18,20 +18,42 @@
 		line-height: 2em;
 	}
 	#wrapper {
-		margin: 3em auto 0;
-		width: 10em;
+		float: right;
+		margin: 3em;
+	}
+	/* Begin touchtone stuff */
+	button.fancy {
+		font: inherit;
+		background: -webkit-linear-gradient(top, #0093e8 0%,#005299 100%);
+		color: white;
+		border-radius: 0.3em;
+		border: 1px solid rgba(100, 100, 100, 0.5);
+		border-top-color: rgba(255, 255, 255, 0.9);
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+		padding: 0.3em 0.8em;
+		cursor: pointer;
+	}
+	button.fancy:active {
+		background: #005299;
+	}
+	#callWidget {
+		position: relative;
+	}
+	#callButton, #callWindow {
+		border: 1px solid #aaa;
+		border-radius: 0.5em;
 	}
 	#callButton {
 		text-align: center;
-		padding: 1.2em 1em;
+		padding: .7em 0.5em;
 		cursor: pointer;
-		width: 14em;
+		width: 13em;
 		background: #eee;
-		border: 1px solid #aaa;
 		color: #333;
-		border-radius: 0.5em;
-		box-shadow: 0 0 0 #00ef44;
-		-webkit-transition: box-shadow 100ms linear;
+		box-shadow: 0 0 0 #00ef44, inset 0 0 0 rgba(0, 0, 0, 0.5);
+		-webkit-transition: box-shadow 25ms linear;
+		-webkit-user-select: none;
+		user-select: none;
 	}
 	#callButton > h2 {
 		font-size: 1.3em;
@@ -41,11 +63,79 @@
 	}
 	#callButton:hover {
 		/* background: #f5f5f5; */
-		box-shadow: 0 0 1em #00ef44;
+		box-shadow: 0 0 1.2em #00ef44, inset 0 0 0 rgba(0, 0, 0, 0.5);
 	}
 	#callButtonSubtitle {
+		font-size: 1em;
+		color: #444;
 		font-weight: normal;
 		margin: 0.5em 0 0 0;
+	}
+	#callButton:active {
+		box-shadow: 0 0 0.5em #00ef44, inset 0 0 1.0em rgba(0, 0, 0, 0.5);
+	}
+	#callWindow {
+		border-width: 0.3em;
+		background: white;
+		position: absolute;
+		max-height: 30em;
+		overflow: auto;
+		width: 35em;
+		right: 0em;
+		top: 100%;
+		margin-top: 1.3em;
+	}
+	#callWindow::before {
+		border: 1em solid transparent;
+		border-top: none;
+		border-bottom-color: #aaa;
+		content: '';
+		position: absolute;
+		top: -1.3em;
+		right: 2em;
+	}
+	#callProgress {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	#callProgress > li {
+		border-bottom: 1px solid black;
+		margin: 0;
+		padding: 1em;
+	}
+
+	/* Call progress widgets */
+	.callType > h3 {
+		font-size: 1.3em;
+		margin: 0.3em 0 0.7em 0;
+	}
+	.callTypes {
+		list-style: none;
+		padding: 0;
+		font-size: 1.3em;
+	}
+	.callTypes > li {
+		padding: 0.2em 0;
+	}
+	.callTypes > li > button {
+		width: 100%;
+		padding: 0.5em 0;
+	}
+
+	.startCall {
+		font-size: 1.4em;
+	}
+	.startCall p {
+		margin-top: 0;
+		font-size: 0.9em;
+	}
+	.startCall > form {
+		text-align: center;
+	}
+	.startCall input {
+		font: inherit;
+		padding: 0.2em;
 	}
 </style>
 <header>
@@ -56,12 +146,33 @@
 	<div id="callWidget">
 		<div id="callButton">
 			<h2>Click here to call us</h2>
-			<p id="callButtonSubtitle">Or call (973) 555-1212</p>
+			<p id="callButtonSubtitle">(973) 555-1212</p>
+		</div>
+		<div id="callWindow">
+			<ul id="callProgress">
+				<li class="callType">
+					<h3>Tell us why you&rsquo;re calling and skip the menu:</h3>
+					<form>
+						<ul class="callTypes">
+							<li><button class="fancy">Open a new account</button></li>
+							<li><button class="fancy">Ask a question about my account</button></li>
+							<li><button class="fancy">Report a suspicious transaction</button></li>
+						</ul>
+					</form>
+				</li>
+				<li class="startCall">
+				<p>We can call you and you&rsquo;ll speak to a representative right away. <strong>Enter your phone number:</strong></p>
+				<form>
+					<input> <button class="fancy">Call me!</button>
+				</form>
+				</li>
+			</ul>
 		</div>
 	</div>
 </div>
-
-
-
-
-<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+<script>
+	window.addEventListener("submit", function(e){
+		console.log("submat");
+		e.preventDefault();
+	}, false);
+</script>
