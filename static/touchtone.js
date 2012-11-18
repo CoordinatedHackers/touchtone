@@ -65,8 +65,12 @@ touchtone.Widget.prototype.startCall = function(){
 	this.socket.on("prompt", function(data) {
 		console.log(data);
 	});
+	this.socket.on("tell_client", this.onmessage.bind(this));
 };
 
+touchtone.Widget.prototype.onmessage = function(data){
+	console.log("Got a message from the agent, should do something with it", data);
+}
 touchtone.flow = {};
 
 touchtone.flow.choice = function (owner, config) {

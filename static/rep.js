@@ -18,11 +18,17 @@ $("#customerList")
 var socket = io.connect('/agent');
 
 var prompts = {
-	link: function($el, $call, data){
+	link: function($el, call){
 		console.log('foo', arguments);
 	},
-	email: function($el, $call, data){
+	email: function($el, call){
 		$el.html(Mustache.render($('#emailPrompt').text()));
+		$el.find('button').click(function(){
+			call.sendPrompt({ type: 'email', value: $el.find('input').val() });
+			call.logEvent("Prompted callee for their email address");
+			call.resetPrompt();
+			return false;
+		}.bind(this));
 	}
 };
 
@@ -31,15 +37,24 @@ var activeCalls = {};
 function Call($call, data) {
 	var $prompter = $call.find('.prompter');
 	this.$call = $call;
+	this.data = data;
 	this.$prompter = $prompter;
-	$prompter.find('select').on('change', function(){
-		if ($(this).val()) {
-			prompts[$(this).val()]($prompter.find('.prompt_details'), $call, data);
+	$prompter.find('select').on('change', function(e){
+		var $target = $(e.target);
+		if ($target.val()) {
+			prompts[$target.val()]($prompter.find('.prompt_details'), this);
 		} else {
 			$prompter.find('.prompt_details').empty();
 		}
-	});
+	}.bind(this));
 }
+
+Call.prototype.resetPrompt = function() {
+	var $select = this.$prompter.find('select');
+	$select[0].selectedIndex = 0;
+	$select.change();
+};
+
 Call.prototype.oncallstatus = function(data) {
 	if (data.status === 'in_progress') {
 		this.$call[0].className = 'active answered';
@@ -53,6 +68,10 @@ Call.prototype.logEvent = function(message) {
 	this.$call.find('.callLog').append($('<li>').text(
 		now.getHours() + ':' + pad(now.getMinutes(), 2) + ': ' + message
 	));
+};
+
+Call.prototype.sendPrompt = function(prompt) {
+	socket.emit('tell_client', { sockID: this.data.sockID, prompt: prompt });
 };
 
 socket.on("call", function(data){
