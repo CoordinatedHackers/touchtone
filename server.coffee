@@ -27,10 +27,11 @@ startACall = (sockID) ->
 		agents.emit "call_status", { sockID: sockID, status: "in_progress" }
 
 app.post "/call", (req, res) ->
+	sockID = call_status
 	res.header "Content-Type", "text/xml"
 	#if phoneNum.match(/\+1[1-9]{10}/g)
 	console.log("/call", req.query)
-	phoneNum = io.sockets.socket(req.query.sockID).dataBlock.phoneNum
+	phoneNum = io.sockets.socket(sockID).dataBlock.phoneNum
 	res.send """
 	<Response>
 		<Dial action="#{config.URL + "/call/status"}">#{phoneNum}</Dial>
