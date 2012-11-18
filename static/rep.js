@@ -1,3 +1,5 @@
+function pad(input, length, character){ var padding = length + 1 - input.length; return (padding > 0 ? Array(length + 1 - input.length).join(character || '0') + input : input); };
+
 var newCallTemplate = document.getElementById("newCallTemplate").innerText;
 $("#customerList")
 	.append(Mustache.render(newCallTemplate, {
@@ -42,8 +44,16 @@ Call.prototype.oncallstatus = function(data) {
 	if (data.status === 'in_progress') {
 		this.$call[0].className = 'active answered';
 		this.$call.find('.status').text('On the line');
+		this.logEvent("Call started");
 	}
 }
+
+Call.prototype.logEvent = function(message) {
+	var now = new Date;
+	this.$call.find('.callLog').append($('<li>').text(
+		now.getHours() + ':' + pad(now.getMinutes(), 2) + ': ' + message
+	));
+};
 
 socket.on("call", function(data){
 	var templateData = {
