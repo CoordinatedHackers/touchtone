@@ -5,10 +5,14 @@
 	}
 	body {
 		margin: 0;
+		padding-top: 4em;
 	}
 	header {
 		background: #333;
-		width: 100%;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
 		padding: 0 1em;
 	}
 	header > h1 {
@@ -50,8 +54,8 @@
 		width: 13em;
 		background: #eee;
 		color: #333;
-		box-shadow: 0 0 0 #00ef44, inset 0 0 0 rgba(0, 0, 0, 0.5);
-		-webkit-transition: box-shadow 25ms linear;
+		box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.6), 0 0 0 #00ef44, inset 0 0 0 rgba(0, 0, 0, 0.5);
+		-webkit-transition: box-shadow 35ms linear;
 		-webkit-user-select: none;
 		user-select: none;
 	}
@@ -63,7 +67,7 @@
 	}
 	#callButton:hover {
 		/* background: #f5f5f5; */
-		box-shadow: 0 0 1.2em #00ef44, inset 0 0 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.6), 0 0 1.2em #00ef44, inset 0 0 0 rgba(0, 0, 0, 0.5);
 	}
 	#callButtonSubtitle {
 		font-size: 1em;
@@ -72,37 +76,53 @@
 		margin: 0.5em 0 0 0;
 	}
 	#callButton:active {
-		box-shadow: 0 0 0.5em #00ef44, inset 0 0 1.0em rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 0 rgba(0, 0, 0, 0.6), 0 0 0.5em #00ef44, inset 0 0 1.0em rgba(0, 0, 0, 0.5);
 	}
 	#callWindow {
 		border-width: 0.3em;
 		background: white;
 		position: absolute;
-		max-height: 30em;
-		overflow: auto;
 		width: 35em;
 		right: 0em;
 		top: 100%;
 		margin-top: 1.3em;
 	}
-	#callWindow::before {
-		border: 1em solid transparent;
-		border-top: none;
-		border-bottom-color: #aaa;
-		content: '';
+	#callWindow::after, #callWindow::before {
+		bottom: 100%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
 		position: absolute;
-		top: -1.3em;
-		right: 2em;
+		pointer-events: none;
+		left: 27em;
+	}
+
+	#callWindow:after {
+		border-color: rgba(0, 0, 0, 0);
+		border-bottom-color: white;
+		border-width: 1em;
+		margin-left: -0.3em;
+	}
+	#callWindow:before {
+		border-color: rgba(170, 170, 170, 0);
+		border-bottom-color: #aaa;
+		border-width: 1.4em;
+		margin-left: -0.7em;
 	}
 	#callProgress {
+		max-height: 30em;
+		overflow: auto;
 		list-style: none;
 		margin: 0;
 		padding: 0;
 	}
 	#callProgress > li {
-		border-bottom: 1px solid black;
 		margin: 0;
 		padding: 1em;
+	}
+	#callProgress > li:not(:last-child) {
+		border-bottom: 1px solid black;
 	}
 
 	/* Call progress widgets */
@@ -120,6 +140,13 @@
 	}
 	.callTypes > li > button {
 		width: 100%;
+		padding: 0.5em 0;
+	}
+	.callType .choice {
+		background: #ccffcc;
+		text-align: center;
+		color: green;
+		font-size: 1.2em;
 		padding: 0.5em 0;
 	}
 
@@ -142,37 +169,49 @@
 <h1>Bank</h1>
 </header>
 
-<div id="wrapper">
-	<div id="callWidget">
-		<div id="callButton">
-			<h2>Click here to call us</h2>
-			<p id="callButtonSubtitle">(973) 555-1212</p>
-		</div>
-		<div id="callWindow">
-			<ul id="callProgress">
-				<li class="callType">
-					<h3>Tell us why you&rsquo;re calling and skip the menu:</h3>
-					<form>
-						<ul class="callTypes">
-							<li><button class="fancy">Open a new account</button></li>
-							<li><button class="fancy">Ask a question about my account</button></li>
-							<li><button class="fancy">Report a suspicious transaction</button></li>
-						</ul>
-					</form>
-				</li>
-				<li class="startCall">
-				<p>We can call you and you&rsquo;ll speak to a representative right away. <strong>Enter your phone number:</strong></p>
-				<form>
-					<input> <button class="fancy">Call me!</button>
-				</form>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
+<div id="wrapper"></div>
+<script id="template" type="text/plain">
+	<ul id="callProgress">
+		<li class="callType">
+			<h3>Tell us why you&rsquo;re calling and skip the menu:</h3>
+			<form>
+				<ul class="callTypes">
+					<li><button class="fancy">Open a new account</button></li>
+					<li><button class="fancy">Ask a question about my account</button></li>
+					<li><button class="fancy">Report a suspicious transaction</button></li>
+				</ul>
+			</form>
+		</li>
+		<li class="startCall">
+		<p>We can call you and you&rsquo;ll speak to a representative right away. <strong>Enter your phone number:</strong></p>
+		<form>
+			<input> <button class="fancy">Call me!</button>
+		</form>
+		</li>
+	</ul>
+</script>
+<script src="jquery-1.8.3.js"></script>
+<script src="touchtone.js"></script>
 <script>
+	var button = new touchtone.Widget("(973) 555-1212", { "flow": [
+		{
+			kind: 'choice',
+			name: 'callType',
+			titleHTML: 'Tell us why you&rsquo;re calling and get right to a person:',
+			choices: [
+				{ value: "newAccount", label: "Open a new account" },
+				{ value: "support", label: "Ask a question about my account" },
+				{ value: "fraud", label: "Report a suspicious transaction" }
+			]
+		}
+	] });
+	wrapper.appendChild(button.el);
+
 	window.addEventListener("submit", function(e){
-		console.log("submat");
+		alert('submat');
 		e.preventDefault();
 	}, false);
+
+
+
 </script>
