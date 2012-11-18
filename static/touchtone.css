@@ -1,0 +1,43 @@
+html {
+	font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+body {
+	margin: 0;
+	padding-top: 4em;
+}
+header {
+	background: #333;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	padding: 0 1em;
+}
+header > h1 {
+	color: white;
+	font-weight: 300;
+	margin: 0;
+	line-height: 2em;
+}
+header > h2 {
+	color: white;
+	font-weight: 300;
+	margin: 0.67em;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+button.fancy {
+	font: inherit;
+	background: -webkit-linear-gradient(top, #0093e8 0%,#005299 100%);
+	color: white;
+	border-radius: 0.3em;
+	border: 1px solid rgba(100, 100, 100, 0.5);
+	border-top-color: rgba(255, 255, 255, 0.9);
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+	padding: 0.3em 0.8em;
+	cursor: pointer;
+}
+button.fancy:active {
+	background: #005299;
+}
