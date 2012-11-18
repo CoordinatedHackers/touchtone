@@ -27,7 +27,7 @@ startACall = (sockID) ->
 		agents.emit "call_status", { sockID: sockID, status: "in_progress" }
 
 app.post "/call", (req, res) ->
-	sockID = call_status
+	sockID = req.query.sockID
 	res.header "Content-Type", "text/xml"
 	#if phoneNum.match(/\+1[1-9]{10}/g)
 	console.log("/call", req.query)
