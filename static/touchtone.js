@@ -59,8 +59,12 @@ touchtone.Widget.prototype.advance = function(){
 
 touchtone.Widget.prototype.startCall = function(){
 	if (this.inCall) return;
-	alert("Hey, we should proabaly start a call now");
 	this.inCall = true;
+	this.socket = io.connect();
+	this.socket.emit("call", this.metadata);
+	this.socket.on("prompt", function(data) {
+		console.log(data);
+	});
 };
 
 touchtone.flow = {};
@@ -107,7 +111,7 @@ touchtone.StartCallFlow = function(parent){
 		.append($('<p>').html('We can call you and you&rsquo;ll speak to a representative right away. <strong>Enter your phone number:</strong>'))
 		.append($('<form>').html('<input type="tel" name="number"> <button class="fancy">Call me!</button>').on('submit', function(e) {
 			// Hey look, no validation at all
-			parent.metadata.myNumber = e.target.elements["number"].value;
+			parent.metadata.phoneNum = e.target.elements["number"].value;
 			// So hax
 			$(el).html('<p style="margin: 0.3em 0; text-align: center; font-weight: bold">Connecting&hellip;</p>');
 			parent.startCall();
