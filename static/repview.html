@@ -1,18 +1,17 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="touchtone.css">
 <style>
+html {
+	font-size: 14px;
+}
 body {
-	margin: 0;
 	min-width: 350px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 header {
-	background: #333;
-	color: #DDD;
 	margin: 0;
 	padding: 0 1em;
 }
 header > h1 {
-	font-weight: 100;
 	margin: 0 auto;
 	padding: 0 2rem;
 	max-width: 50rem;
@@ -111,6 +110,10 @@ header > h1 {
 <script src="/socket.io/socket.io.js"></script>
 <script src="jquery-1.8.3.js"></script>
 <script src="mustache.js"></script>
+<script id="emailPrompt" type="text/mustache">
+<p>Suggested email: <input name="email"></p>
+<button class="fancy">FMLFMLFMLFMLFMLFML</button>
+</script>
 <script id="newCallTemplate" type="text/mustache">
 <li class="{{status}}">
 	<h1>{{title}}</h1>
@@ -128,8 +131,9 @@ header > h1 {
 			<select>
 				<option></option>
 				<option value="link">Send a link</option>
-				<option value="prompt_email">Ask for email address</option>
+				<option value="email">Ask for email address</option>
 			</select>
+			<div class="prompt_details"></div>
 		</div>
 	</div>
 </li>

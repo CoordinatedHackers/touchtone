@@ -13,8 +13,38 @@ $("#customerList")
 		statusText: "Finished"
 	}))
 ;
-
 var socket = io.connect('/agent');
+
+var prompts = {
+	link: function($el, $call, data){
+		console.log('foo', arguments);
+	},
+	email: function($el, $call, data){
+		$el.html(Mustache.render($('#emailPrompt').text()));
+	}
+};
+
+var activeCalls = {};
+
+function Call($call, data) {
+	var $prompter = $call.find('.prompter');
+	this.$call = $call;
+	this.$prompter = $prompter;
+	$prompter.find('select').on('change', function(){
+		if ($(this).val()) {
+			prompts[$(this).val()]($prompter.find('.prompt_details'), $call, data);
+		} else {
+			$prompter.find('.prompt_details').empty();
+		}
+	});
+}
+Call.prototype.oncallstatus = function(data) {
+	if (data.status === 'in_progress') {
+		this.$call[0].className = 'active answered';
+		this.$call.find('.status').text('On the line');
+	}
+}
+
 socket.on("call", function(data){
 	var templateData = {
 		status: "waiting",
@@ -29,8 +59,15 @@ socket.on("call", function(data){
 	}
 	$newCall = $(Mustache.render(newCallTemplate, templateData));
 	$newCall.one('click', function(){
-		$(this).addClass('active');
+		this.className = "active answered";
+		$newCall.find('.status').text('Connecting');
 		socket.emit("call", data);
 	});
+	activeCalls[data.sockID] = new Call($newCall, data);
+
 	$("#customerList").prepend($newCall);
+});
+
+socket.on("call_status", function(data){
+	activeCalls[data.sockID].oncallstatus(data);
 });

@@ -1,25 +1,30 @@
+no_calls = process.env.NO_CALLS
 express = require "express"
 app = express()
 server = (require "http").createServer app
 io = (require "socket.io").listen server
 twilio = require "twilio-js"
-config = require "config"
+unless no_calls then config = require "config"
 
 server.listen 8000
 app.use express.static __dirname + "/static"
 app.use express.bodyParser()
 
-twilio.AccountSid = config.AccountSid
-twilio.AuthToken = config.AuthToken
+unless no_calls
+	twilio.AccountSid = config.AccountSid
+	twilio.AuthToken = config.AuthToken
 
 startACall = (sockID) ->
 	console.log("Start a call", sockID)
-	twilio.Call.create(
-		to: config.SupportPhone,
-		from: config.PhoneNum,
-		url: config.URL + "/call?sockID=#{encodeURIComponent(sockID)}",
-		ifMachine: "Hangup",
-	)
+	unless no_calls
+		twilio.Call.create(
+			to: config.SupportPhone,
+			from: config.PhoneNum,
+			url: config.URL + "/call?sockID=#{encodeURIComponent(sockID)}",
+			ifMachine: "Hangup",
+		)
+	else
+		agents.emit "call_status", { sockID: sockID, status: "in_progress" }
 
 app.post "/call", (req, res) ->
 	res.header "Content-Type", "text/xml"
@@ -31,6 +36,7 @@ app.post "/call", (req, res) ->
 		<Dial action="#{config.URL + "/call/status"}">#{phoneNum}</Dial>
 	</Response>
 	"""
+	agents.emit "call_status", { sockID: sockID, status: "in_progress" }
 
 app.post "/call/status", (req, res) ->
 	console.log("/call/status", req.body)
