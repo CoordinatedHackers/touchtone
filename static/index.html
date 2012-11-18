@@ -1,0 +1,10 @@
+<p>Hey Kid, Stop all the Downloadin'</p>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io.connect('http://localhost');
+	socket.emit("call", {"phoneNum": "9739026583"});
+	socket.on("prompt", function(data) {
+		console.log(data);
+	});
+</script>
+

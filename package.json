@@ -1,0 +1,21 @@
+{
+  "name": "TouchTone",
+  "version": "0.0.1",
+  "description": "TouchTone",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coordinated-hackers/touchtone.git"
+  },
+  "dependencies": {
+	  "coffee-script": "1.4",
+      "express": "3",
+      "socket.io": "0.9",
+  },
+  "engines": {
+    "node": "0.8.x"
+  }
+}
