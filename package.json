@@ -11,9 +11,9 @@
     "url": "git@github.com:coordinated-hackers/touchtone.git"
   },
   "dependencies": {
-	  "coffee-script": "1.4",
+      "coffee-script": "1.4",
       "express": "3",
-      "socket.io": "0.9",
+      "socket.io": "0.9"
   },
   "engines": {
     "node": "0.8.x"
