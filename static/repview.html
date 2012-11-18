@@ -33,12 +33,13 @@ header > h1 {
 	border-radius: 1em;
 	border: 3px solid;
 	position: relative;
-	height: 3em;
+}
+#customerList > li:not(.active) {
 	cursor: pointer;
 	-webkit-user-select: none;
 	user-select: none;
 }
-#customerList > li:hover {
+#customerList > li:not(.active):hover {
 	background: #eee;
 }
 #customerList > li > ul {
@@ -46,6 +47,7 @@ header > h1 {
 }
 #customerList > li.answered { border-color: #009947; }
 #customerList > li.waiting { border-color: #E72727; }
+#customerList > li.finished { border-color: #999999; }
 #customerList > li > h1 {
 	margin: 0;
 	font-size: 1.5em;
@@ -68,6 +70,31 @@ header > h1 {
 	padding: 0 1em;
 	color: #aaa;
 }
+
+.callDetails {
+	border-top: 1px solid #ccc;
+	margin-top: 0.5em;
+	padding-top: 1em;
+	height: 20em;
+	display: none;
+}
+.callLog {
+	border: 1px solid #bbb;
+	width: 20em;
+	height: 20em;
+	list-style: none;
+	padding: 0;
+	position: absolute;
+}
+.callLog > li {
+	padding: 0.5em;
+	border-bottom: 1px solid #ddd;
+}
+.prompter {
+	margin-left: 21em;
+}
+.prompter > select {
+	width: 100%;
 </style>
 
 <header>
@@ -76,59 +103,32 @@ header > h1 {
 
 <div id="container">
 	<ul id="customerList">
-		<li class="answered">
-			<h1>John Doe</h1>
-			<h2>(212) 555-1234</h2>
-			<div class="controls">
-				<p class="status">Ringing</p>
-			</div>
-		</li>
-		<li class="waiting">
-			<h1>Jane Doe</h1>
-			<h2>(212) 555-1234</h2>
-			<div class="controls">
-				<p class="status">Waiting</p>
-			</div>
-		</li>
-		<li class="waiting">
-			<h1>Bill Smith</h1>
-			<h2>(212) 555-1234</h2>
-			<div class="controls">
-				<p class="status">Waiting</p>
-			</div>
-		</li>
 	</ul>
-
 </div>
 <script src="/socket.io/socket.io.js"></script>
+<script src="jquery-1.8.3.js"></script>
 <script src="mustache.js"></script>
 <script id="newCallTemplate" type="text/mustache">
-<h1>{{userName}}</h1>
-<h2>{{phoneNum}}</h2>
-<div class="controls">
-	<p class="status">Waiting</p>
-</div>
+<li class="{{status}}">
+	<h1>{{title}}</h1>
+	{{#subtitle}}
+	<h2>{{subtitle}}</h2>
+	{{/subtitle}}
+	<div class="controls">
+		<p class="status">{{statusText}}</p>
+	</div>
+	<div class="callDetails">
+		<ul class="callLog">
+			<li>12:15: Call started</li>
+		</ul>
+		<div class="prompter">
+			<select>
+				<option></option>
+				<option value="link">Send a link</option>
+				<option value="prompt_email">Ask for email address</option>
+			</select>
+		</div>
+	</div>
+</li>
 </script>
-<script>
-	var socket = io.connect('/agent');
-	socket.on("call", function(data){
-		/*
-		console.log(data);
-		var btn = document.createElement("button");
-		btn.appendChild(document.createTextNode(data.phoneNum));
-		document.body.appendChild(btn);
-		btn.addEventListener("click", function() {
-			socket.emit("prompt", data);
-		});
-		*/
-		//Beware the jank
-		console.log(data);
-		var li = document.createElement("li");
-		li.className = "waiting"
-		li.innerHTML = Mustache.render(newCallTemplate, data);
-		document.getElementById("customerList").appendChild(li);
-		//Hook up an eventListener some how
-
-	});
-	var newCallTemplate = document.getElementById("newCallTemplate").innerText;
-</script>
+<script src="rep.js"></script>

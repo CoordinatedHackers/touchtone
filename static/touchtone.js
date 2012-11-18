@@ -112,7 +112,7 @@ touchtone.StartCallFlow = function(parent){
 		.append($('<form>').html('<input type="tel" name="number"> <button class="fancy">Call me!</button>').on('submit', function(e) {
 			// Hey look, no validation at all
 			parent.metadata.phoneNum = e.target.elements["number"].value;
-			parent.metadata.userName = $("#userName").text();
+			// parent.metadata.userName = $("#userName").text();
 			// So hax
 			$(el).html('<p style="margin: 0.3em 0; text-align: center; font-weight: bold">Connecting&hellip;</p>');
 			parent.startCall();
