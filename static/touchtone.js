@@ -70,6 +70,10 @@ touchtone.Widget.prototype.startCall = function(){
 
 touchtone.Widget.prototype.onmessage = function(data){
 	console.log("Got a message from the agent, should do something with it", data);
+	if (data.repName != undefined) {
+		$(this.progressEl).children(":last").remove().end()
+			.append($("<li>").text("Now chatting with " + data.repName));
+	}
 }
 touchtone.flow = {};
 

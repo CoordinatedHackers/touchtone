@@ -1,3 +1,4 @@
+var REP_NAME = "Sam Epstein"
 function pad(input, length, character){ var padding = length + 1 - input.length; return (padding > 0 ? Array(length + 1 - input.length).join(character || '0') + input : input); };
 
 var newCallTemplate = document.getElementById("newCallTemplate").innerText;
@@ -60,6 +61,10 @@ Call.prototype.oncallstatus = function(data) {
 		this.$call[0].className = 'active answered';
 		this.$call.find('.status').text('On the line');
 		this.logEvent("Call started");
+		socket.emit("tell_client", {
+			sockID: this.data.sockID,
+			repName: REP_NAME
+		});
 	}
 }
 
