@@ -30,6 +30,7 @@ socket.on("call", function(data){
 	$newCall = $(Mustache.render(newCallTemplate, templateData));
 	$newCall.one('click', function(){
 		$(this).addClass('active');
+		socket.emit("call", data);
 	});
 	$("#customerList").prepend($newCall);
 });
