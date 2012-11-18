@@ -62,17 +62,21 @@ touchtone.Widget.prototype.startCall = function(){
 	this.inCall = true;
 	this.socket = io.connect();
 	this.socket.emit("call", this.metadata);
-	this.socket.on("prompt", function(data) {
-		console.log(data);
-	});
 	this.socket.on("tell_client", this.onmessage.bind(this));
 };
 
-touchtone.Widget.prototype.onmessage = function(data){
+touchtone.Widget.prototype.onmessage = function(data, cb){
 	console.log("Got a message from the agent, should do something with it", data);
 	if (data.repName != undefined) {
 		$(this.progressEl).children(":last").remove().end()
-			.append($("<li>").text("Now chatting with " + data.repName));
+			.append($("<li>", { 'class': 'repID' }).text("You\u2019ll be talking to ").append(
+				$('<strong>').text(data.repName))
+			);
+	}
+	if ('prompt' in data) {
+		this.progressEl.appendChild((new touchtone.prompts[data.prompt.type](
+			this, data, cb
+		)).el);
 	}
 }
 touchtone.flow = {};
@@ -127,4 +131,29 @@ touchtone.StartCallFlow = function(parent){
 			return false;
 		}))[0]
 	;
+};
+
+touchtone.prompts = {}
+
+touchtone.prompts.email = function(parent, data, cb) {
+	var el = this.el = $('<li>', { 'class': 'emailPrompt' })
+		.append($('<h3>').html('What&rsquo;s your email address?'))
+		.append($('<form>')
+			.append($('<input size=30 name=email>').attr('value', data.prompt.value))
+			.append(' ')
+			.append($('<button>', { 'class': "fancy" }).text('Sumbit'))
+			.on('submit', function(e) {
+				var val = $(el).find('input').val();
+				cb(val);
+				$(el).find('form').replaceWith($('<p>', { 'class': 'choice' }).text(val));
+				return false;
+		}))[0]
+	;
+};
+
+touchtone.prompts.link = function(parent, data, cb) {
+	console.log(data);
+	var el = this.el = ($('<li>', { 'class': 'link' })
+		.append($('<a>', { href: data.prompt.value }).text(data.prompt.value))
+	)[0];
 };

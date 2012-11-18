@@ -63,6 +63,6 @@ agents = io
 		socket.on "call", (data) ->
 			console.log "Starting a call with #{data.phoneNum}"
 			startACall data.sockID
-		socket.on "tell_client", (data) ->
-			io.sockets.socket(data.sockID).emit("tell_client", data)
+		socket.on "tell_client", (data, cb) ->
+			io.sockets.socket(data.sockID).emit("tell_client", data, (arg) -> cb(arg))
 			console.log("Prompting!", data)

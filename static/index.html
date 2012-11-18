@@ -107,8 +107,8 @@
 
 	/* Call progress widgets */
 	.callType > h3 {
-		font-size: 1.3em;
-		margin: 0.3em 0 0.7em 0;
+		font-size: 1.2em;
+		margin: 0 0 0.7em 0;
 	}
 	.callTypes {
 		list-style: none;
@@ -122,7 +122,7 @@
 		width: 100%;
 		padding: 0.5em 0;
 	}
-	.callType .choice {
+	.callType .choice, .emailPrompt .choice {
 		background: #ccffcc;
 		text-align: center;
 		color: green;
@@ -137,12 +137,28 @@
 		margin-top: 0;
 		font-size: 0.9em;
 	}
-	.startCall > form {
+	.startCall > form, .emailPrompt > form {
 		text-align: center;
 	}
-	.startCall input {
+	.startCall input, .emailPrompt input {
 		font: inherit;
 		padding: 0.2em;
+	}
+
+	.repID {
+		font-size: 1.4em;
+	}
+
+	.emailPrompt {
+		font-size: 1.2em;
+	}
+	.emailPrompt h3 {
+		font-size: 1em;
+		margin-top: 0;
+	}
+	.link {
+		text-align: center;
+		font-size: 1.2em;
 	}
 </style>
 

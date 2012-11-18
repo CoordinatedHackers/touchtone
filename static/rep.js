@@ -20,12 +20,20 @@ var socket = io.connect('/agent');
 
 var prompts = {
 	link: function($el, call){
-		console.log('foo', arguments);
+		$el.html(Mustache.render($('#linkPrompt').text()));
+		$el.find('button').click(function(){
+			call.sendPrompt({ type: 'link', value: $el.find('input').val() });
+			call.logEvent("Sent a link to the callee");
+			call.resetPrompt();
+			return false;
+		}.bind(this));
 	},
 	email: function($el, call){
 		$el.html(Mustache.render($('#emailPrompt').text()));
 		$el.find('button').click(function(){
-			call.sendPrompt({ type: 'email', value: $el.find('input').val() });
+			call.sendPrompt({ type: 'email', value: $el.find('input').val() }, function(res){
+				call.logEvent("Email address: " + res);
+			});
 			call.logEvent("Prompted callee for their email address");
 			call.resetPrompt();
 			return false;
@@ -75,8 +83,8 @@ Call.prototype.logEvent = function(message) {
 	));
 };
 
-Call.prototype.sendPrompt = function(prompt) {
-	socket.emit('tell_client', { sockID: this.data.sockID, prompt: prompt });
+Call.prototype.sendPrompt = function(prompt, cb) {
+	socket.emit('tell_client', { sockID: this.data.sockID, prompt: prompt }, cb);
 };
 
 socket.on("call", function(data){
