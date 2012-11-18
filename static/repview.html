@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<style>
+body {
+	margin: 0;
+	min-width: 350px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+header {
+	background: #333;
+	color: #DDD;
+	margin: 0;
+	padding: 0 1em;
+}
+header > h1 {
+	font-weight: 100;
+	width: 960px;
+	margin: 0 auto;
+}
+#container {
+	width: 960px;
+	margin: 0 auto;
+	position: relative;
+}
+.customerList {
+	/*display: -webkit-flex;
+	-webkit-flex-flow: row wrap;
+	*/
+}
+ul {
+	list-style: none;
+}
+.customer {
+	margin: auto 0.5em;
+	padding: 1em;
+	border-radius: 1em;
+	border: 3px solid;
+	position: relative;
+}
+.customer > ul {
+	padding: 0;
+}
+.customer.answered {
+	border-color: #009947;
+}
+.customer.waiting {
+	border-color: #E72727;
+}
+.customerData {
+	background: red;
+	width: 100%;
+}
+.rightSide {
+	position: absolute;
+	right: 1em;
+	top: 1em;
+	height: 100%;
+}
+</style>
+
+<header>
+	<h1>Representative View</h1>
+</header>
+
+<div id="container">
+	<ul class="customerList">
+		<li class="customer answered">
+			<ul>
+				<li class="userName">Name: John Doe</li>
+				<li class="callStatus">Call Status: Answered</li>
+				<li class="accountNumber">Account Number: 123456789</li>
+				<li class="phoneNumber">Phone Number: (212) 555-1234</li>
+			</ul>
+			<div class="rightSide"><button class="answerButton">Answer Call</button></div>
+		</li>
+		<li class="customer waiting">
+			<ul>
+				<li class="userName">Name: Jane Doe</li>
+				<li class="callStatus">Call Status: Waiting</li>
+				<li class="accountNumber">Account Number: 123456780</li>
+				<li class="phoneNumber">Phone Number: (212) 555-1234</li>
+				<li><button class="answerButton">Answer Call</button></li>
+			</ul>
+		</li>
+		<li class="customer waiting">
+			<ul>
+				<li class="userName">Name: Bill Smith</li>
+				<li class="callStatus">Call Status: Waiting</li>
+				<li class="accountNumber">Account Number: 555555555</li>
+				<li class="phoneNumber">Phone Number: (212) 555-1234</li>
+				<li><button class="answerButton">Answer Call</button></li>
+			</ul>
+		</li>
+	</ul>
+
+	<ul class="customerData">
+		<li>Waffles</li>
+		<li></li>
+	</ul>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io.connect('/agent');
+	socket.on("call", function(data){
+		console.log(data);
+		var btn = document.createElement("button");
+		btn.appendChild(document.createTextNode(data.phoneNum));
+		document.body.appendChild(btn);
+		btn.addEventListener("click", function() {
+			socket.emit("prompt", data);
+		});
+	});
+	socket.on("prompt", function(data) {
+		console.log(data);
+	});
+</script>
