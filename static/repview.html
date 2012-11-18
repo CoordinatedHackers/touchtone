@@ -101,9 +101,18 @@ header > h1 {
 
 </div>
 <script src="/socket.io/socket.io.js"></script>
+<script src="mustache.js"></script>
+<script id="newCallTemplate" type="text/mustache">
+<h1>{{userName}}</h1>
+<h2>{{phoneNum}}</h2>
+<div class="controls">
+	<p class="status">Waiting</p>
+</div>
+</script>
 <script>
 	var socket = io.connect('/agent');
 	socket.on("call", function(data){
+		/*
 		console.log(data);
 		var btn = document.createElement("button");
 		btn.appendChild(document.createTextNode(data.phoneNum));
@@ -111,8 +120,15 @@ header > h1 {
 		btn.addEventListener("click", function() {
 			socket.emit("prompt", data);
 		});
-	});
-	socket.on("prompt", function(data) {
+		*/
+		//Beware the jank
 		console.log(data);
+		var li = document.createElement("li");
+		li.className = "waiting"
+		li.innerHTML = Mustache.render(newCallTemplate, data);
+		document.getElementById("customerList").appendChild(li);
+		//Hook up an eventListener some how
+
 	});
+	var newCallTemplate = document.getElementById("newCallTemplate").innerText;
 </script>
